@@ -8,6 +8,12 @@ Fill .env to set your private key and the public key of the other party.
 
 Note: the public key needs to be in uncompressed format, and without "0x" prefix. Use getPubKey command to decompress your public key.
 
+## Use 
+
+Once keys are set run 
+`go run .` 
+to see available commands
+
 ## 🔧 todo
 
 - encrypt same file for multiple recipient
