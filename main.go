@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/asa93/ecdh-cli-go/cmd"
+	"github.com/asa93/ecdh-cli/cmd"
 )
 
 func main() {

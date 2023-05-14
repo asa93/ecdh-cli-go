@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/asa93/ecdh-cli-go/ecdh"
+	"github.com/asa93/ecdh-cli/ecdh"
 	"github.com/spf13/cobra"
 )
 

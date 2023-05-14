@@ -1,4 +1,4 @@
-module github.com/asa93/ecdh-cli-go
+module github.com/asa93/ecdh-cli
 
 go 1.20
 
