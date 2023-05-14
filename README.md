@@ -16,5 +16,5 @@ to see available commands
 
 ## 🔧 todo
 
+- use SALT
 - encrypt same file for multiple recipient
-- use HKDF
