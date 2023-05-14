@@ -12,14 +12,18 @@ import (
 
 	"github.com/decred/dcrd/dcrec/secp256k1"
 	"github.com/joho/godotenv"
+
+	"crypto/rand"
+	"crypto/sha256"
+
+	"golang.org/x/crypto/hkdf"
 )
 
 func Encrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToFile string) {
 
 	//generate DH shared secret using keys
-	//GenerateSharedSecret returns x coordinate of the generated point
 	sharedPkey := GenerateSharedPkey(privKey, pubKey)
-	fmt.Println("🔓 sharedPkey: ", sharedPkey)
+	fmt.Println("🔑 sharedPkey generated: ", sharedPkey)
 
 	// should turn into private key with HKDF ?
 
@@ -39,7 +43,7 @@ func Encrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToF
 
 	//save encrypted file
 	ioutil.WriteFile("src/encrypted", encryptedMessage, 0644)
-	fmt.Println("✅ file encrypted with ECDH to /src/encrypted")
+	fmt.Println("🔓 file encrypted with ECDH to /src/encrypted")
 
 }
 
@@ -67,14 +71,43 @@ func Decrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToF
 	`, string(decrypted))
 }
 
+// generates a secure private key using one private key and a public key
 func GenerateSharedPkey(pkey *secp256k1.PrivateKey, pubkey *secp256k1.PublicKey) *secp256k1.PrivateKey {
+
+	//GenerateSharedSecret returns the x coordinate of the shared public key
+	// Qs = dA*dB*G = dA*Qb = dB*Qa
 	sharePkeyBytes := secp256k1.GenerateSharedSecret(pkey, pubkey)
 
-	// we will use the x as pkey
-	// ideally we would use HKDF(x) for more security
-	sharedPkey, _ := secp256k1.PrivKeyFromBytes(sharePkeyBytes)
+	//use HKDF to generate a more secure key
+	derivedKeyBytes := genHKDF(sharePkeyBytes)
+
+	sharedPkey, _ := secp256k1.PrivKeyFromBytes(derivedKeyBytes)
 
 	return sharedPkey
+}
+
+// derives a secure private key from an array of bytes usin HKDF
+func genHKDF(input []byte) []byte {
+
+	// Underlying hash function for HMAC.
+	hash := sha256.New
+
+	// Non-secret salt, optional (can be nil).
+	// Recommended: hash-length random value.
+	salt := make([]byte, hash().Size())
+	if _, err := rand.Read(salt); err != nil {
+		panic(err)
+	}
+
+	// Generate a 32-bytes derived key.
+	hkdf := hkdf.New(hash, input, nil, nil)
+
+	key := make([]byte, 32)
+	if _, err := io.ReadFull(hkdf, key); err != nil {
+		panic(err)
+	}
+
+	return key
 }
 
 func GetKeys() (*secp256k1.PrivateKey, *secp256k1.PublicKey) {

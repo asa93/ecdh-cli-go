@@ -6,6 +6,7 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1 v1.0.3
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.7.0
+	golang.org/x/crypto v0.9.0
 )
 
 require (
