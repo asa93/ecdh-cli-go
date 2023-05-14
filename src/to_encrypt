@@ -1,0 +1,19 @@
+# New Hard Fork
+
+[cols="1,1"]
+|===
+| Creation Date | 2022-10-06 
+| Latest Update | 2022-10-11
+| Contributors  | @asa93
+| Status        | Draft
+| Consensus Classification | Hard Fork
+| Constitution Classification | Not Affected
+|===
+
+## Summary
+
+The ethereum main chain introduced the "Berlin" network upgrade. The same upgrade should be performed on the Q blockchain.
+
+## Rationale
+
+The original rationales from the EIPs are convincing. Also, as the new logic is already implemented in the geth client and has been integrated in the Q-client, this change comes at very low cost.
