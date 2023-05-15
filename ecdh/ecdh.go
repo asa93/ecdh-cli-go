@@ -47,7 +47,7 @@ func Encrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToF
 
 }
 
-func Decrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToFile string) {
+func Decrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToFile string, pathOut string) {
 	//generate DH shared secret using keys
 	//GenerateSharedSecret returns x coordinate of the generated point
 	sharedPkey := GenerateSharedPkey(privKey, pubKey)
@@ -62,7 +62,7 @@ func Decrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToF
 		return
 	}
 
-	ioutil.WriteFile("src/decrypted", decrypted, 0644)
+	ioutil.WriteFile(pathOut, decrypted, 0644)
 
 	fmt.Println(`
 	================

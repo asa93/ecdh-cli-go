@@ -27,7 +27,7 @@ var decryptCmd = &cobra.Command{
 		fmt.Println("pubkey 1 --", privKey.PubKey())
 		fmt.Println("pubkey 2 --", pubKey2)
 
-		ecdh.Decrypt(privKey, pubKey2, path)
+		ecdh.Decrypt(privKey, pubKey2, path, "src/decrypted")
 
 	},
 }
