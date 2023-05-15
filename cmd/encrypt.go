@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/asa93/ecdh-cli/ecdh"
@@ -31,15 +30,15 @@ var encryptCmd = &cobra.Command{
 
 		batch, _ := cmd.Flags().GetString("batch")
 
-		privKey, pubKey2 := ecdh.GetKeys()
+		privKey, pubKey := ecdh.GetKeys()
 
 		fmt.Println("🔑 your pubkey       --", privKey.PubKey())
 
 		if batch == "" {
 
-			fmt.Println("🔑 recipient pubkey  --", pubKey2)
+			fmt.Println("🔑 recipient pubkey  --", pubKey)
 
-			ecdh.Encrypt(privKey, pubKey2, path, "src/encrypted")
+			ecdh.Encrypt(privKey, pubKey, path, "src/encrypted-"+pubKey.GetX().String()[0:12])
 		} else {
 			file, err := ioutil.ReadFile(batch)
 			if err != nil {
@@ -51,7 +50,7 @@ var encryptCmd = &cobra.Command{
 			for i := 0; i < len(publicKeys); i++ {
 				pubKey := ecdh.ParsePublicKey(publicKeys[0])
 
-				ecdh.Encrypt(privKey, pubKey, path, "src/encrypted-"+strconv.Itoa(i))
+				ecdh.Encrypt(privKey, pubKey, path, "src/encrypted-"+pubKey.GetX().String()[0:12])
 			}
 
 		}

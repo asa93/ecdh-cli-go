@@ -15,6 +15,8 @@ set keys in your .env file
 build with `go build`
 
 then run `./ecdh-cli` to see available commands
+
+Note : encrypted files contains the first 12 numbers of the recipient public key in their title.
  
 ### Batch encryption
 
