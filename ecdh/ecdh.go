@@ -19,7 +19,7 @@ import (
 	"golang.org/x/crypto/hkdf"
 )
 
-func Encrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToFile string) {
+func Encrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToFile string, pathOut string) {
 
 	//generate DH shared secret using keys
 	sharedPkey := GenerateSharedPkey(privKey, pubKey)
@@ -42,8 +42,8 @@ func Encrypt(privKey *secp256k1.PrivateKey, pubKey *secp256k1.PublicKey, pathToF
 	}
 
 	//save encrypted file
-	ioutil.WriteFile("src/encrypted", encryptedMessage, 0644)
-	fmt.Println("🔓 file encrypted with ECDH to /src/encrypted")
+	ioutil.WriteFile(pathOut, encryptedMessage, 0644)
+	fmt.Println("🔓 file encrypted with ECDH to " + pathOut)
 
 }
 
@@ -120,7 +120,15 @@ func GetKeys() (*secp256k1.PrivateKey, *secp256k1.PublicKey) {
 	privKey, _ := secp256k1.PrivKeyFromBytes(pkBytes)
 
 	///decode uncompressed pubkey of other party
-	pubKeyStr := strings.Split(os.Getenv("RECIPIENT_PUBKEY"), " ")
+
+	pubKey2 := ParsePublicKey(os.Getenv("RECIPIENT_PUBKEY"))
+
+	return privKey, pubKey2
+}
+
+// parse & return an uncompressed public key from a string with x,y coordinates
+func ParsePublicKey(keyStr string) *secp256k1.PublicKey {
+	pubKeyStr := strings.Split(keyStr, " ")
 
 	x := new(big.Int)
 	x, ok := x.SetString(pubKeyStr[0], 10)
@@ -134,9 +142,8 @@ func GetKeys() (*secp256k1.PrivateKey, *secp256k1.PublicKey) {
 		fmt.Println("SetString: error")
 	}
 
-	pubKey2 := secp256k1.NewPublicKey(x, y)
+	return secp256k1.NewPublicKey(x, y)
 
-	return privKey, pubKey2
 }
 func ReadByteFile(path string) []byte {
 	file, err := os.Open(path)

@@ -1,6 +1,7 @@
 # ECDH with go
 
 This client uses ECDH (Elliptic Curve Diffie-Hellman) key exchange to encrypt a file as a secret between two party.
+
 ## Set keys
 
 Fill .env to set your private key and the public key of the other party.
@@ -8,12 +9,17 @@ Fill .env to set your private key and the public key of the other party.
 Note: the public key needs to be in uncompressed format, and without "0x" prefix. Use getPubKey command to decompress your public key.
 
 ## How to use 
+
 set keys in your .env file
 
 build with `go build`
 
 then run `./ecdh-cli` to see available commands
  
+### Batch encryption
+
+Create a file with all the uncompressed recipient keys you want to encrypt a message for.
+Then run encrypt command with `batch` flag 
 
 ## How it works 
 
